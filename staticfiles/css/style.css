@@ -1,0 +1,47 @@
+body {
+    padding-top: 20px;
+    background-color: #f8f9fa;
+}
+
+.department-header {
+    margin-bottom: 20px;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.online-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.online {
+    background-color: #28a745;
+}
+
+.offline {
+    background-color: #6c757d;
+}
+
+#chat-messages {
+    background-color: #f8f9fa;
+}
+
+.message-time {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
