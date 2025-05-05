@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2>Departments</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for department in departments %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                {% if department.banner_image %}
+                                    <img src="{{ department.banner_image.url }}" class="card-img-top" alt="{{ department.name }}" style="height: 150px; object-fit: cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ department.name }}</h5>
+                                    <p class="card-text">{{ department.description|truncatewords:20 }}</p>
+                                    <a href="{% url 'department_detail' department.pk %}" class="btn btn-outline-primary">View Department</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

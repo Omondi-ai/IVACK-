@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2>Assessments</h2>
+            </div>
+            <div class="card-body">
+                {% if user.role == 'PR' %}
+                    <div class="d-flex justify-content-between mb-4">
+                        <a href="{% url 'create_assessment' %}" class="btn btn-primary">Create Assessment</a>
+                        <a href="{% url 'upload_results' %}" class="btn btn-success">Bulk Upload Results</a>
+                    </div>
+                {% endif %}
+                
+                <div class="list-group">
+                    {% for assessment in assessments %}
+                        <a href="{% url 'assessment_detail' assessment.pk %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ assessment.course.code }} - {{ assessment.title }}</h5>
+                                <small>{{ assessment.get_assessment_type_display }}</small>
+                            </div>
+                            <p class="mb-1">Max Score: {{ assessment.max_score }}</p>
+                            <small>Given on: {{ assessment.date_given|date:"M d, Y" }}</small>
+                        </a>
+                    {% empty %}
+                        <div class="list-group-item">
+                            <p class="mb-0">No assessments available.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

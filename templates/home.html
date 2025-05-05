@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2>Welcome to University Portal</h2>
+            </div>
+            <div class="card-body">
+                {% if not user.is_authenticated %}
+                    <p class="lead">Please login or register to access all features.</p>
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{% url 'login' %}" class="btn btn-primary me-md-2">Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-outline-primary">Register</a>
+                        <a href="{% url 'application' %}" class="btn btn-success ms-md-2">Apply Now</a>
+                    </div>
+                {% else %}
+                    <p class="lead">Welcome back, {{ user.username }}!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>Recent Posts</h3>
+            </div>
+            <div class="card-body">
+                {% for post in posts|slice:":5" %}
+                    <div class="mb-3">
+                        <h5><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h5>
+                        <small class="text-muted">Posted by {{ post.author }} on {{ post.created_at|date:"M d, Y" }}</small>
+                        <p>{{ post.content|truncatewords:30 }}</p>
+                    </div>
+                    {% if not forloop.last %}<hr>{% endif %}
+                {% empty %}
+                    <p>No posts available.</p>
+                {% endfor %}
+                <a href="{% url 'post_list' %}" class="btn btn-outline-primary mt-2">View All Posts</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>Departments</h3>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for department in departments %}
+                        <a href="{% url 'department_detail' department.pk %}" class="list-group-item list-group-item-action">
+                            {{ department.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3>Online Users</h3>
+                </div>
+                <div class="card-body">
+                    {% for online_user in online_users %}
+                        <div class="d-flex align-items-center mb-2">
+                            {% if online_user.profile_picture %}
+                                <img src="{{ online_user.profile_picture.url }}" alt="{{ online_user.username }}" width="32" height="32" class="rounded-circle me-2">
+                            {% else %}
+                                <i class="bi bi-person-circle fs-4 me-2"></i>
+                            {% endif %}
+                            <span>{{ online_user.username }}</span>
+                            {% if online_user.role == 'PR' %}
+                                <span class="badge bg-success ms-2">Professor</span>
+                            {% elif online_user.role == 'ST' %}
+                                <span class="badge bg-info ms-2">Student</span>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p>No users online.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

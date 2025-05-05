@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVACK University Portal - {% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        :root {
+            --jungle-green: #1a5f2a;
+            --golden-yellow: #ffd700;
+            --ivory: #fffff0;
+            --dark-slate: #2f4f4f;
+            --light-taupe: #d2b48c;
+        }
+        
+        body {
+            background-color: var(--ivory);
+            color: var(--dark-slate);
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--jungle-green) 0%, #0d3b1e 100%) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .university-logo {
+            height: 40px;
+            margin-right: 12px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--golden-yellow) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--jungle-green);
+            border-color: var(--jungle-green);
+        }
+        
+        .btn-primary:hover {
+            background-color: #134621;
+            border-color: #134621;
+        }
+        
+        .btn-outline-light:hover {
+            color: var(--jungle-green) !important;
+        }
+        
+        .dropdown-menu {
+            background-color: var(--dark-slate);
+            border: none;
+        }
+        
+        .dropdown-item {
+            color: var(--ivory);
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--jungle-green);
+            color: var(--golden-yellow);
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--dark-slate) 0%, #1a3a3a 100%);
+            border-top: 4px solid var(--golden-yellow);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--jungle-green) 0%, #0d3b1e 100%);
+            color: white;
+            border-radius: 8px 8px 0 0 !important;
+        }
+        
+        .alert {
+            border-radius: 8px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/university_logo.jpeg' %}" alt="" class="university-logo">
+                IVACK University
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'department_list' %}"><i class="bi bi-building me-1"></i> Departments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'post_list' %}"><i class="bi bi-newspaper me-1"></i> Posts</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'inbox' %}"><i class="bi bi-envelope me-1"></i> Messages</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'assessment_list' %}"><i class="bi bi-clipboard-data me-1"></i> Results</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="d-flex">
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="Profile" width="32" height="32" class="rounded-circle me-2">
+                                {% else %}
+                                    <i class="bi bi-person-circle fs-4 me-2"></i>
+                                {% endif %}
+                                <strong>{{ user.username }}</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person me-1"></i> Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-1"></i> Sign out</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-light me-2"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-light" style="background-color: var(--golden-yellow); color: var(--dark-slate);"><i class="bi bi-person-plus me-1"></i> Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi {% if message.tags == 'success' %}bi-check-circle{% else %}bi-exclamation-triangle{% endif %} me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-golden">IVACK University</h5>
+                    <p>Excellence in education since 1906</p>
+                    <img src="{% static 'images/university_logo.jpeg' %}" alt="" style="height: 60px;">
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-golden">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
+                        <li><a href="{% url 'department_list' %}" class="text-white">Departments</a></li>
+                        <li><a href="{% url 'post_list' %}" class="text-white">News & Announcements</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-golden">Contact Us</h5>
+                    <address>
+                        <i class="bi bi-geo-alt"></i> Nairobi<br>
+                        <i class="bi bi-telephone"></i> (254) 745-2106<br>
+                        <i class="bi bi-envelope"></i> odhiamboderrickomondi020@gmail.com
+                    </address>
+                </div>
+            </div>
+            <hr class="my-4 bg-light-taupe">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 IVACK University. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

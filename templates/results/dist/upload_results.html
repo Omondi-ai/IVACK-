@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Results{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2>Bulk Upload Results</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <a href="{% url 'assessment_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+
+                <div class="mt-4">
+                    <h5>CSV Format Instructions</h5>
+                    <p>Your CSV file should contain these columns:</p>
+                    <ul>
+                        <li><code>student_id</code> - The student's ID</li>
+                        <li><code>score</code> - Numeric score</li>
+                        <li><code>remarks</code> - Optional comments</li>
+                    </ul>
+                    <a href="#" class="btn btn-sm btn-outline-secondary">Download Sample CSV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const fileInput = document.querySelector('#id_file');
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+            alert('Please upload a CSV file');
+            e.preventDefault();
+        }
+    }
+});
+</script>
+{% endblock %}

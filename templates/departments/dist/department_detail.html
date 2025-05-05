@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ department.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .department-header {
+        background-color: {{ department.theme_color }};
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="department-header text-white py-4 mb-4 rounded">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-2">
+                {% if department.logo %}
+                    <img src="{{ department.logo.url }}" alt="{{ department.name }} Logo" class="img-fluid">
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+                <h1>{{ department.name }}</h1>
+                <p class="lead">{{ department.code }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: {{ department.theme_color }}; color: white;">
+                <h3>About</h3>
+            </div>
+            <div class="card-body">
+                <p>{{ department.description }}</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: {{ department.theme_color }}; color: white;">
+                <h3>Courses</h3>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for course in courses %}
+                        <div class="list-group-item">
+                            <h5>{{ course.code }} - {{ course.name }}</h5>
+                            <p>{{ course.description|truncatewords:20 }}</p>
+                            {% if course.syllabus %}
+                                <a href="{{ course.syllabus.url }}" class="btn btn-sm btn-outline-secondary">Download Syllabus</a>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p>No courses available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: {{ department.theme_color }}; color: white;">
+                <h3>Department Posts</h3>
+            </div>
+            <div class="card-body">
+                {% for post in posts %}
+                    <div class="mb-3">
+                        <h5><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h5>
+                        <small class="text-muted">Posted by {{ post.author }} on {{ post.created_at|date:"M d, Y" }}</small>
+                        <p>{{ post.content|truncatewords:30 }}</p>
+                    </div>
+                    {% if not forloop.last %}<hr>{% endif %}
+                {% empty %}
+                    <p>No posts available.</p>
+                {% endfor %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_post' %}" class="btn btn-outline-primary mt-2">Create Post</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: {{ department.theme_color }}; color: white;">
+                <h3>Quick Links</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="{% url 'post_list' %}?department={{ department.pk }}">All Department Posts</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{% url 'assessment_list' %}">Results</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="list-group-item">
+                            <a href="{% url 'new_thread' %}">Contact Department</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        {% if user.is_authenticated and user.department == department %}
+            <div class="card mb-4">
+                <div class="card-header" style="background-color: {{ department.theme_color }}; color: white;">
+                    <h3>Department Faculty</h3>
+                </div>
+                <div class="card-body">
+                    {% for professor in professors %}
+                        <div class="d-flex align-items-center mb-2">
+                            {% if professor.profile_picture %}
+                                <img src="{{ professor.profile_picture.url }}" alt="{{ professor.username }}" width="32" height="32" class="rounded-circle me-2">
+                            {% else %}
+                                <i class="bi bi-person-circle fs-4 me-2"></i>
+                            {% endif %}
+                            <span>{{ professor.username }}</span>
+                        </div>
+                    {% empty %}
+                        <p>No faculty members.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

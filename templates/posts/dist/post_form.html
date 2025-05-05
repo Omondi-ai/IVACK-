@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2>Create New Post</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('id_target_type').addEventListener('change', function() {
+    const targetType = this.value;
+    
+    // Hide all target fields first
+    document.getElementById('div_id_department').style.display = 'none';
+    document.getElementById('div_id_course').style.display = 'none';
+    document.getElementById('div_id_professor').style.display = 'none';
+    
+    // Show the relevant field based on selection
+    if (targetType === 'DE') {
+        document.getElementById('div_id_department').style.display = 'block';
+    } else if (targetType === 'CO') {
+        document.getElementById('div_id_course').style.display = 'block';
+    } else if (targetType === 'PR') {
+        document.getElementById('div_id_professor').style.display = 'block';
+    }
+});
+
+// Trigger change event on page load to set initial state
+document.getElementById('id_target_type').dispatchEvent(new Event('change'));
+</script>
+{% endblock %}
+{% endblock %}
