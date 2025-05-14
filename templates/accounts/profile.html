@@ -28,12 +28,27 @@
                                 Visitor
                             {% endif %}
                         </p>
+                        
+                        <!-- Password Change Section -->
+                        <div class="mt-4">
+                            <a href="{% url 'password_change' %}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-key-fill"></i> Change Password
+                            </a>
+                        </div>
                     </div>
+                    
                     <div class="col-md-8">
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             {{ form|crispy }}
-                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Update Profile
+                                </button>
+                                <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to Home
+                                </a>
+                            </div>
                         </form>
                     </div>
                 </div>
