@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: university_db
+      POSTGRES_USER: university_user
+      POSTGRES_PASSWORD: university_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: university_db
+      DB_USER: university_user
+      DB_PASSWORD: university_pass
+
+volumes:
+  postgres_data:
+  static_volume:
