@@ -2,10 +2,12 @@
 set -e
 
 host="$1"
+shift
 
-until nc -z "$host" 5432; do
-  echo "Postgres is unavailable at $host:5432 - sleeping"
-  sleep 1
+until PGPASSWORD=$DB_PASSWORD psql -h "$host" -U "$DB_USER" -d "$DB_NAME" -c '\q'; do
+  >&2 echo "PostgreSQL is unavailable - sleeping"
+  sleep 2
 done
 
-echo "Postgres is up - continuing"
+>&2 echo "PostgreSQL is up - executing command"
+exec "$@"
