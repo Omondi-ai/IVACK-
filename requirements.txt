@@ -34,6 +34,8 @@ django-filter==25.1
 
 # WebSockets
 channels==4.1.0
+channels-redis==4.1.0  # Added for AWS Redis support
 
-# Encoding
-chardet==5.2.0
+# AWS Specific
+boto3==1.34.0  # For S3 storage
+django-storages==1.14.0  # For S3 storage

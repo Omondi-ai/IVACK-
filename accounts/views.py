@@ -88,3 +88,4 @@ def application_view(request):
     else:
         form = ApplicationForm()
     return render(request, 'accounts/application.html', {'form': form})
+

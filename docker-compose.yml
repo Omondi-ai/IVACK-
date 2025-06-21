@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   db:
-    image: postgres:15
+    image: postgres:17
     environment:
       POSTGRES_DB: university_portal
       POSTGRES_USER: django_admin
