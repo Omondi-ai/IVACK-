@@ -1,20 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
-set -e
+echo "Waiting for database..."
+while ! nc -z $DB_HOST 5432; do
+  sleep 1
+done
 
-# Wait for database to be ready (only needed if using Docker Compose)
-if [ "$DB_HOST" ]; then
-  until nc -z -v -w30 "$DB_HOST" 5432; do
-    echo "Waiting for database connection..."
-    sleep 5
-  done
-fi
-
-# Apply database migrations
+echo "Running migrations..."
 python manage.py migrate --noinput
 
-# Collect static files
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Start Gunicorn
-exec gunicorn --bind 0.0.0.0:8000 university_portal.wsgi
+echo "Starting Gunicorn..."
+exec gunicorn university_portal.wsgi:application --bind 0.0.0.0:$PORT
