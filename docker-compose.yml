@@ -18,6 +18,10 @@ services:
       context: .
       args:
         PIP_TIMEOUT: "300"
+
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn university_portal.wsgi:application --bind 0.0.0.0:$PORT"
     environment:
       DB_HOST: db
       DB_NAME: university_portal
